@@ -6,6 +6,5 @@ type Pizza struct {
 	Price       float64 `json:"price"`
 	Description string  `json:"description"`
 	Spicy       bool    `json:"spicy"`
-	Size        string  `json:"size"`
 	Available   bool    `json:"available"`
 }
