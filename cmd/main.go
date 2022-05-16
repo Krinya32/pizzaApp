@@ -6,18 +6,20 @@ import (
 	"github.com/krinya32/pizzaApp/pkg/handlers"
 	"github.com/krinya32/pizzaApp/pkg/repository"
 	"github.com/krinya32/pizzaApp/pkg/service"
+	_ "github.com/lib/pq"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
-	"log"
 	"os"
 )
 
 func main() {
+	logrus.SetFormatter(new(logrus.JSONFormatter))
 	if err := InitConfig(); err != nil {
-		log.Fatalf("Error initializing configs %s", err.Error())
+		logrus.Fatalf("Error initializing configs %s", err.Error())
 	}
 
 	if err := godotenv.Load(); err != nil {
-		log.Fatalf("Error loading env variables: %s", err.Error())
+		logrus.Fatalf("Error loading env variables: %s", err.Error())
 	}
 
 	db, err := repository.NewPostgresDB(repository.Config{
@@ -29,7 +31,7 @@ func main() {
 		Password: os.Getenv("DB_PASSWORD"),
 	})
 	if err != nil {
-		log.Fatalf("Failed to initialize DB %s", err.Error())
+		logrus.Fatalf("Failed to initialize DB %s", err.Error())
 	}
 
 	repos := repository.NewRepository(db)
@@ -38,7 +40,7 @@ func main() {
 
 	srv := new(pizzaApp.Server)
 	if err := srv.Run(viper.GetString("port"), handler.InitRoutes()); err != nil {
-		log.Fatalf("Error occured while running http server: %s", err.Error())
+		logrus.Fatalf("Error occured while running http server: %s", err.Error())
 	}
 }
 

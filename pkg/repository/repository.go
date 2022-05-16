@@ -1,8 +1,13 @@
 package repository
 
-import "github.com/jmoiron/sqlx"
+import (
+	"github.com/jmoiron/sqlx"
+	"github.com/krinya32/pizzaApp"
+)
 
 type Pizzas interface {
+	GetAll() ([]pizzaApp.PizzaStruct, error)
+	GetById(id int) (pizzaApp.PizzaStruct, error)
 }
 
 type Repository struct {
@@ -10,5 +15,7 @@ type Repository struct {
 }
 
 func NewRepository(db *sqlx.DB) *Repository {
-	return &Repository{}
+	return &Repository{
+		Pizzas: NewPizzaPostgres(db),
+	}
 }
