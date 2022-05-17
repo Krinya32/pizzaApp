@@ -42,3 +42,9 @@ func (r *PizzaPostgres) GetById(id int) (pizzaApp.PizzaStruct, error) {
 	err := r.db.Get(&pizza, query, id)
 	return pizza, err
 }
+
+func (r *PizzaPostgres) Delete(id int) error {
+	query := fmt.Sprintf("DELETE FROM %s WHERE id = $1", pizzaVariable)
+	_, err := r.db.Exec(query, id)
+	return err
+}

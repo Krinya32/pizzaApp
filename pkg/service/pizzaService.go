@@ -24,3 +24,7 @@ func (s *PizzaService) GetAll() ([]pizzaApp.PizzaStruct, error) {
 func (s *PizzaService) GetById(id int) (pizzaApp.PizzaStruct, error) {
 	return s.repo.GetById(id)
 }
+
+func (s *PizzaService) Delete(id int) error {
+	return s.repo.Delete(id)
+}

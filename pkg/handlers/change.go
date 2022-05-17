@@ -65,7 +65,21 @@ func (h *Handler) getPizzaById(c *gin.Context) {
 }
 
 func (h *Handler) deletePizzaById(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, "Invalid id parameter")
+		return
+	}
 
+	err = h.services.Pizzas.Delete(id)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, statusResponse{
+		Status: "ok",
+	})
 }
 
 func (h *Handler) updatePizza(c *gin.Context) {
