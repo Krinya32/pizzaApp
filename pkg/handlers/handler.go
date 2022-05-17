@@ -18,6 +18,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 
 	pizzas := router.Group("/pizza")
 	{
+		pizzas.POST("/", h.createPizza)
 		pizzas.GET("/", h.getAllPizzas)
 		pizzas.GET("/:id", h.getPizzaById)
 		pizzas.DELETE("/:id", h.deletePizzaById)

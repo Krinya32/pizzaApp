@@ -5,6 +5,8 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
+const pizzaVariable = "pizzas"
+
 type Config struct {
 	Host     string
 	Port     string

@@ -13,6 +13,10 @@ func NewPizzaService(repo repository.Pizzas) *PizzaService {
 	return &PizzaService{repo: repo}
 }
 
+func (s *PizzaService) Create(pizza pizzaApp.PizzaStruct) (int, error) {
+	return s.repo.Create(pizza)
+}
+
 func (s *PizzaService) GetAll() ([]pizzaApp.PizzaStruct, error) {
 	return s.repo.GetAll()
 }

@@ -6,6 +6,7 @@ import (
 )
 
 type Pizzas interface {
+	Create(pizza pizzaApp.PizzaStruct) (int, error)
 	GetAll() ([]pizzaApp.PizzaStruct, error)
 	GetById(id int) (pizzaApp.PizzaStruct, error)
 }
