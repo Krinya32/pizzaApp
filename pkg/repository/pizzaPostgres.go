@@ -16,23 +16,19 @@ func NewPizzaPostgres(db *sqlx.DB) *PizzaPostgres {
 }
 
 func (r *PizzaPostgres) Create(pizza pizzaApp.PizzaStruct) (int, error) {
-	tx, err := r.db.Begin()
-	if err != nil {
-		return 0, err
-	}
-	var id int
+	var lastInsertId = 0
+
 	createPizzaQuery := fmt.Sprintf("INSERT INTO %s (title, price, description, spicy, available) VALUES ($1, $2, $3, $4, $5) RETURNING id", pizzaVariable)
-	row := tx.QueryRow(createPizzaQuery, pizza.Title, pizza.Price, pizza.Description, pizza.Spicy, pizza.Available)
-	if err := row.Scan(&id); err != nil {
-		tx.Rollback()
-		return 0, err
-	}
-	return id, tx.Commit()
+
+	err := r.db.QueryRow(createPizzaQuery, pizza.Title, pizza.Price, pizza.Description, pizza.Spicy, pizza.Available).Scan(&lastInsertId)
+
+	fmt.Printf("Created pizza with id: %d", lastInsertId)
+	return lastInsertId, err
 }
 
 func (r *PizzaPostgres) GetAll() ([]pizzaApp.PizzaStruct, error) {
 	var pizzas []pizzaApp.PizzaStruct
-	query := fmt.Sprintf("SELECT * FROM %s", pizzaVariable)
+	query := fmt.Sprintf("SELECT * FROM %s ORDER BY id DESC", pizzaVariable)
 	err := r.db.Select(&pizzas, query)
 	return pizzas, err
 }
