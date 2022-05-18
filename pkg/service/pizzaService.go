@@ -28,3 +28,11 @@ func (s *PizzaService) GetById(id int) (pizzaApp.PizzaStruct, error) {
 func (s *PizzaService) Delete(id int) error {
 	return s.repo.Delete(id)
 }
+
+func (s *PizzaService) Update(id int, input pizzaApp.UpdatePizzaInput) error {
+	if err := input.Validate(); err != nil {
+		return nil
+	}
+
+	return s.repo.Update(id, input)
+}

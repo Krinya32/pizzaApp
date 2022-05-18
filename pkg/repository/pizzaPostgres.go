@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/jmoiron/sqlx"
 	"github.com/krinya32/pizzaApp"
+	"strings"
 )
 
 type PizzaPostgres struct {
@@ -46,5 +47,48 @@ func (r *PizzaPostgres) GetById(id int) (pizzaApp.PizzaStruct, error) {
 func (r *PizzaPostgres) Delete(id int) error {
 	query := fmt.Sprintf("DELETE FROM %s WHERE id = $1", pizzaVariable)
 	_, err := r.db.Exec(query, id)
+	return err
+}
+
+func (r *PizzaPostgres) Update(id int, input pizzaApp.UpdatePizzaInput) error {
+	value := make([]string, 0)
+	arguments := make([]interface{}, 0)
+	argumentsId := 1
+
+	if input.Title != nil {
+		value = append(value, fmt.Sprintf("title=$%d", argumentsId))
+		arguments = append(arguments, *input.Title)
+		argumentsId++
+	}
+
+	if input.Price != nil {
+		value = append(value, fmt.Sprintf("price=$%d", argumentsId))
+		arguments = append(arguments, *input.Price)
+		argumentsId++
+	}
+
+	if input.Description != nil {
+		value = append(value, fmt.Sprintf("description=$%d", argumentsId))
+		arguments = append(arguments, *input.Description)
+		argumentsId++
+	}
+
+	if input.Spicy != nil {
+		value = append(value, fmt.Sprintf("spicy=$%d", argumentsId))
+		arguments = append(arguments, *input.Spicy)
+		argumentsId++
+	}
+
+	if input.Available != nil {
+		value = append(value, fmt.Sprintf("available=$%d", argumentsId))
+		arguments = append(arguments, *input.Available)
+		argumentsId++
+	}
+
+	SetQuery := strings.Join(value, ", ")
+	query := fmt.Sprintf("UPDATE %s SET %s WHERE id=$%d", pizzaVariable, SetQuery, argumentsId)
+	arguments = append(arguments, id)
+
+	_, err := r.db.Exec(query, arguments...)
 	return err
 }

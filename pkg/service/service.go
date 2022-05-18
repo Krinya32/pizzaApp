@@ -10,6 +10,7 @@ type Pizzas interface {
 	GetAll() ([]pizzaApp.PizzaStruct, error)
 	GetById(id int) (pizzaApp.PizzaStruct, error)
 	Delete(id int) error
+	Update(id int, input pizzaApp.UpdatePizzaInput) error
 }
 
 type Service struct {
